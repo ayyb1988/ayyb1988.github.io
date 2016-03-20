@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <title>routable-android源码分析 | yabin</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="routable-android是一个内置在Android应用中的本地URL路由器。可以对本地的URL和外部&amp;gt;的URL进行路由,本文对其源码进行分析。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="routable-android源码分析">
+<meta property="og:url" content="https://github.com/ayyb1988/2016/03/20/routable-android源码分析/index.html">
+<meta property="og:site_name" content="yabin">
+<meta property="og:description" content="routable-android是一个内置在Android应用中的本地URL路由器。可以对本地的URL和外部&amp;gt;的URL进行路由,本文对其源码进行分析。">
+<meta property="og:image" content="http://7xl0pi.com1.z0.glb.clouddn.com/router-android%E6%B5%81%E7%A8%8B%E5%9B%BE.jpg">
+<meta property="og:image" content="http://7xl0pi.com1.z0.glb.clouddn.com/routable%E9%87%8D%E8%A6%81%E7%9A%84%E5%B1%9E%E6%80%A7%E5%88%86%E6%9E%90.jpg">
+<meta property="og:updated_time" content="2016-03-20T15:41:10.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="routable-android源码分析">
+<meta name="twitter:description" content="routable-android是一个内置在Android应用中的本地URL路由器。可以对本地的URL和外部&amp;gt;的URL进行路由,本文对其源码进行分析。">
+<meta name="twitter:image" content="http://7xl0pi.com1.z0.glb.clouddn.com/router-android%E6%B5%81%E7%A8%8B%E5%9B%BE.jpg">
+  
+    <link rel="alternative" href="/atom.xml" title="yabin" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="http://7xl0pi.com1.z0.glb.clouddn.com/me.jpg" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">yabin</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">坚持 分享 开源</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						<div class="icon-wrap icon-link hide" data-idx="2">
+							<div class="loopback_l"></div>
+							<div class="loopback_r"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>Menu</li>
+						<li>Tags</li>
+						
+						<li>Links</li>
+						
+						
+						<li>Über</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/">主页</a></li>
+				        
+							<li><a href="/archives">所有文章</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/ayyb1988" title="github">github</a>
+					        
+								<a class="weibo" target="_blank" href="http://weibo.com/u/2097029985?is_all=1" title="weibo">weibo</a>
+					        
+								<a class="zhihu" target="_blank" href="https://www.zhihu.com/people/yang-ya-bin-64-34" title="zhihu">zhihu</a>
+					        
+								<a class="rss" target="_blank" href="http://blog.csdn.net/u011570979" title="rss">rss</a>
+					        
+								<a class="twitter" target="_blank" href="https://twitter.com/yang_yabin" title="twitter">twitter</a>
+					        
+								<a class="linkedin" target="_blank" href="https://stackoverflow.com/users/4727626/yabin-ya?tab=profile" title="linkedin">linkedin</a>
+					        
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/tags/Performance/" style="font-size: 10px;">Performance</a> <a href="/tags/hexo博客/" style="font-size: 10px;">hexo博客</a> <a href="/tags/open-project-analysis/" style="font-size: 10px;">open-project-analysis</a> <a href="/tags/计划/" style="font-size: 10px;">计划</a>
+					</div>
+				</section>
+				
+				
+				
+				<section class="switch-part switch-part3">
+					<div id="js-friends">
+					
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">奥巴马的博客</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">卡卡的美丽传说</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">本泽马的博客</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">吉格斯的博客</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">习大大大不同</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">托蒂的博客</a>
+			        
+			        </div>
+				</section>
+				
+
+				
+				
+				<section class="switch-part switch-part4">
+				
+					<div id="js-aboutme">坚持，分享，开源</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">yabin</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+			
+				<img lazy-src="http://7xl0pi.com1.z0.glb.clouddn.com/me.jpg" class="js-avatar">
+			
+			</div>
+			<hgroup>
+			  <h1 class="header-author">yabin</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">坚持 分享 开源</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/archives">所有文章</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/ayyb1988" title="github">github</a>
+			        
+						<a class="weibo" target="_blank" href="http://weibo.com/u/2097029985?is_all=1" title="weibo">weibo</a>
+			        
+						<a class="zhihu" target="_blank" href="https://www.zhihu.com/people/yang-ya-bin-64-34" title="zhihu">zhihu</a>
+			        
+						<a class="rss" target="_blank" href="http://blog.csdn.net/u011570979" title="rss">rss</a>
+			        
+						<a class="twitter" target="_blank" href="https://twitter.com/yang_yabin" title="twitter">twitter</a>
+			        
+						<a class="linkedin" target="_blank" href="https://stackoverflow.com/users/4727626/yabin-ya?tab=profile" title="linkedin">linkedin</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+
+      <div class="body-wrap"><article id="post-routable-android源码分析" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/03/20/routable-android源码分析/" class="article-date">
+  	<time datetime="2016-03-20T15:33:42.000Z" itemprop="datePublished">2016-03-20</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      routable-android源码分析
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/open-project-analysis/">open-project-analysis</a></li></ul>
+	</div>
+
+        
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/categories/源码分析/">源码分析</a>
+	</div>
+
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>routable-android是一个内置在Android应用中的本地URL路由器。可以对本地的URL和外部&gt;的URL进行路由,本文对其源码进行分析。<br><a id="more"></a></p>
+<h3 id="一-情景分析"><a href="#一-情景分析" class="headerlink" title="一. 情景分析"></a>一. 情景分析</h3><p>点击Notification或者web跳转到默认制定的详细界面<br>eg: 新闻类 跳转到某条新闻详细页；电商类&amp;O2O：跳转到某个商品详细页；聊天类，跳转到某个聊天室;音视频类 跳转到某个具体的视频详细页 等等；更进一步说，可以跳转到任何一个界面。activity&amp;fragment</p>
+<h3 id="二-router-android介绍"><a href="#二-router-android介绍" class="headerlink" title="二. router-android介绍"></a>二. router-android介绍</h3><p>定义好协议，对每一个activity进行编号。进行注册和使用。</p>
+<p>routable-android是一个内置在Android应用中的本地URL路由器。可以对本地的URL和外部的URL进行路由。</p>
+<p>功能：<br>1、可在任意代码块中调用路由功能；<br>2、打开外部URLs；<br>3、使用多个路由器。</p>
+<h3 id="三-demo"><a href="#三-demo" class="headerlink" title="三. demo"></a>三. demo</h3><h3 id="四-流程图"><a href="#四-流程图" class="headerlink" title="四. 流程图"></a>四. 流程图</h3><p><img src="http://7xl0pi.com1.z0.glb.clouddn.com/router-android%E6%B5%81%E7%A8%8B%E5%9B%BE.jpg" alt=""></p>
+<p><img src="http://7xl0pi.com1.z0.glb.clouddn.com/routable%E9%87%8D%E8%A6%81%E7%9A%84%E5%B1%9E%E6%80%A7%E5%88%86%E6%9E%90.jpg" alt=""></p>
+<h3 id="五-重要方法分析"><a href="#五-重要方法分析" class="headerlink" title="五. 重要方法分析"></a>五. 重要方法分析</h3><h3 id="5-1-map-String-format-Class-lt-extends-Activity-gt-klass-RouterOptions-options"><a href="#5-1-map-String-format-Class-lt-extends-Activity-gt-klass-RouterOptions-options" class="headerlink" title="5.1 map(String format ,Class&lt;? extends Activity&gt; klass,RouterOptions options)"></a>5.1 map(String format ,Class&lt;? extends Activity&gt; klass,RouterOptions options)</h3><p><code>首先要定义协议格式 format，便于open时按照map时协定的format来进行传值</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">map</span><span class="params">(String format, Class&lt;? extends Activity&gt; klass, RouterOptions options)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">if</span> (options == <span class="keyword">null</span>) &#123;</span><br><span class="line">			options = <span class="keyword">new</span> RouterOptions();</span><br><span class="line">		&#125;</span><br><span class="line">		options.setOpenClass(klass);</span><br><span class="line">		<span class="keyword">this</span>._routes.put(format, options);</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="5-2-open-String-url-Bundle-extras-Context-context"><a href="#5-2-open-String-url-Bundle-extras-Context-context" class="headerlink" title="5.2 open(String url, Bundle extras, Context context)"></a>5.2 open(String url, Bundle extras, Context context)</h3><p><code>跳转url调用的方法 url 跳转的url, bundle ;context 当前activity</code><br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">open</span><span class="params">(String url, Bundle extras, Context context)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">if</span> (context == <span class="keyword">null</span>) &#123;</span><br><span class="line">			<span class="keyword">throw</span> <span class="keyword">new</span> ContextNotProvided(</span><br><span class="line">					<span class="string">"You need to supply a context for Router "</span></span><br><span class="line">							+ <span class="keyword">this</span>.toString());</span><br><span class="line">		&#125;</span><br><span class="line">        <span class="comment">//详细分析见（1） 根据url， 解析出RouterParmas</span></span><br><span class="line">		RouterParams params = <span class="keyword">this</span>.paramsForUrl(url);</span><br><span class="line">		RouterOptions options = params.routerOptions;</span><br><span class="line"></span><br><span class="line">		<span class="comment">//详细分析见(2) 根据解析到的RouterParmas，来设置intent, setclass,addFlags</span></span><br><span class="line"></span><br><span class="line">		Intent intent = <span class="keyword">this</span>.intentFor(context, params);</span><br><span class="line">		<span class="keyword">if</span> (intent == <span class="keyword">null</span>) &#123;</span><br><span class="line">			<span class="comment">// Means the options weren't opening a new activity</span></span><br><span class="line">			<span class="keyword">return</span>;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">if</span> (extras != <span class="keyword">null</span>) &#123;</span><br><span class="line">			intent.putExtras(extras);</span><br><span class="line">		&#125;</span><br><span class="line">		context.startActivity(intent);</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure></p>
+<p>(1) paramsForUrl(String url)<br><code>根据open的url，来解析出对应的RouterParams</code><br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> RouterParams <span class="title">paramsForUrl</span><span class="params">(String url)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span> (<span class="keyword">this</span>._cachedRoutes.get(url) != <span class="keyword">null</span>) &#123;</span><br><span class="line">			<span class="keyword">return</span> <span class="keyword">this</span>._cachedRoutes.get(url);</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		String[] givenParts = urlPath.split(<span class="string">"/"</span>);</span><br><span class="line"></span><br><span class="line">		RouterParams routerParams = <span class="keyword">null</span>;</span><br><span class="line">        <span class="comment">//注意此处的用法 this._routes.entrySet()，把hashMap转为set，这样可以通过迭代器一个一个遍历item</span></span><br><span class="line">		<span class="keyword">for</span> (Entry&lt;String, RouterOptions&gt; entry : <span class="keyword">this</span>._routes.entrySet()) &#123;</span><br><span class="line">            <span class="comment">//routerUrl 即 _router的key</span></span><br><span class="line">        	String routerUrl = cleanUrl(entry.getKey());</span><br><span class="line">            <span class="comment">//routerUrl 即 _router的value</span></span><br><span class="line">			RouterOptions routerOptions = entry.getValue();</span><br><span class="line">			String[] routerParts = routerUrl.split(<span class="string">"/"</span>);</span><br><span class="line"></span><br><span class="line">			<span class="keyword">if</span> (routerParts.length != givenParts.length) &#123;</span><br><span class="line">				<span class="keyword">continue</span>;</span><br><span class="line">			&#125;</span><br><span class="line"></span><br><span class="line">			<span class="comment">//转到(1.1) 分析urlToParamsMap  把url(user/1234)按照(user/:user_id)转为map(&lt;user_id,1234&gt;)`</span></span><br><span class="line">			Map&lt;String, String&gt; givenParams = urlToParamsMap(givenParts, routerParts);</span><br><span class="line">			<span class="keyword">if</span> (givenParams == <span class="keyword">null</span>) &#123;</span><br><span class="line">				<span class="keyword">continue</span>;</span><br><span class="line">			&#125;</span><br><span class="line"></span><br><span class="line">			routerParams = <span class="keyword">new</span> RouterParams();</span><br><span class="line">			routerParams.openParams = givenParams;<span class="comment">//跳转参数</span></span><br><span class="line">			routerParams.routerOptions = routerOptions;<span class="comment">//routes vlaue实体</span></span><br><span class="line">			<span class="keyword">break</span>;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="comment">//把url,routerParams加入到_cachedRoutes中缓存起来，再次调用parmasForUrl,首先查看缓存中是否存在</span></span><br><span class="line">		<span class="keyword">this</span>._cachedRoutes.put(url, routerParams);</span><br><span class="line">		<span class="keyword">return</span> routerParams;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure></p>
+<p>(1.1) urlToParamsMap<br><code>此方法把url(user/1234)按照(user/:user_id)转为map(&lt;user_id,1234&gt;)</code><br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> Map&lt;String, String&gt; <span class="title">urlToParamsMap</span><span class="params">(String[] givenUrlSegments, String[] routerUrlSegments)</span> </span>&#123;</span><br><span class="line">		Map&lt;String, String&gt; formatParams = <span class="keyword">new</span> HashMap&lt;String, String&gt;();</span><br><span class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> index = <span class="number">0</span>; index &lt; routerUrlSegments.length; index++) &#123;</span><br><span class="line">			String routerPart = routerUrlSegments[index];</span><br><span class="line">			String givenPart = givenUrlSegments[index];</span><br><span class="line"></span><br><span class="line">			<span class="keyword">if</span> (routerPart.charAt(<span class="number">0</span>) == <span class="string">':'</span>) &#123;</span><br><span class="line">				String key = routerPart.substring(<span class="number">1</span>, routerPart.length());</span><br><span class="line">				formatParams.put(key, givenPart);</span><br><span class="line">				<span class="keyword">continue</span>;</span><br><span class="line">			&#125;</span><br><span class="line"></span><br><span class="line">			<span class="keyword">if</span> (!routerPart.equals(givenPart)) &#123;</span><br><span class="line">				<span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">return</span> formatParams;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure></p>
+<p>(2)  Intent intentFor(Context context, RouterParams params)</p>
+<p><code>根据RouterParams 设置对应的目标class以及intent的flags</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> Intent <span class="title">intentFor</span><span class="params">(Context context, RouterParams params)</span> </span>&#123;</span><br><span class="line">        RouterOptions options = params.routerOptions;</span><br><span class="line">        Intent intent = intentFor(params);</span><br><span class="line">        intent.setClass(context, options.getOpenClass());</span><br><span class="line">        <span class="keyword">this</span>.addFlagsToIntent(intent, context);</span><br><span class="line">        <span class="keyword">return</span> intent;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<h3 id="六-router-android优点和不足之处在哪"><a href="#六-router-android优点和不足之处在哪" class="headerlink" title="六. router-android优点和不足之处在哪"></a>六. router-android优点和不足之处在哪</h3><p>6.1 是否可以跳转到某个fragment<br>6.2 RouterOptions有什么用处<br>6.3 RouterParams RouterOptions 各有什么用处？为什么这样设计？从中可以学到什么？是否有改进的方案</p>
+<h3 id="七-参考"><a href="#七-参考" class="headerlink" title="七. 参考"></a>七. 参考</h3><p><a href="http://blog.startry.com/2016/02/14/Think-Of-UIViewController-Switch/" target="_blank" rel="external">iOS界面跳转的一些优化方案</a><br><a href="http://www.mobile-open.com/2015/38865.html" target="_blank" rel="external">routable-android——可路由的Android类库</a></p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/03/23/进程常驻研究/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          进程常驻研究
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/03/20/Rxjava+Retrofix初探/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Rxjava+Retrofix初探</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+
+
+
+
+<div class="duoshuo">
+	<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="routable-android源码分析" data-title="routable-android源码分析" data-url="https://github.com/ayyb1988/2016/03/20/routable-android源码分析/"></div>
+	<!-- 多说评论框 end -->
+	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+	<script type="text/javascript">
+	var duoshuoQuery = {short_name:"yabin"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+	<!-- 多说公共JS代码 end -->
+</div>
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2016 yabin
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false
+	}
+</script>
+<script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?02e30c9fa5fb8a53acf9e372f314815b";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+  </div>
+</body>
+</html>
