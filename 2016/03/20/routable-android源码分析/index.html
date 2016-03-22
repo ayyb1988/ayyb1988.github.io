@@ -13,7 +13,7 @@
 <meta property="og:site_name" content="yabin">
 <meta property="og:description" content="routable-android是一个内置在Android应用中的本地URL路由器。可以对本地的URL和外部&amp;gt;的URL进行路由,本文对其源码进行分析。">
 <meta property="og:image" content="http://7xl0pi.com1.z0.glb.clouddn.com/router-android%E6%B5%81%E7%A8%8B%E5%9B%BE.jpg">
-<meta property="og:updated_time" content="2016-03-20T15:51:13.000Z">
+<meta property="og:updated_time" content="2016-03-22T00:23:02.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="routable-android源码分析">
 <meta name="twitter:description" content="routable-android是一个内置在Android应用中的本地URL路由器。可以对本地的URL和外部&amp;gt;的URL进行路由,本文对其源码进行分析。">
@@ -266,7 +266,7 @@
 <p>(2)  Intent intentFor(Context context, RouterParams params)</p>
 <p><code>根据RouterParams 设置对应的目标class以及intent的flags</code></p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> Intent <span class="title">intentFor</span><span class="params">(Context context, RouterParams params)</span> </span>&#123;</span><br><span class="line">        RouterOptions options = params.routerOptions;</span><br><span class="line">        Intent intent = intentFor(params);</span><br><span class="line">        intent.setClass(context, options.getOpenClass());</span><br><span class="line">        <span class="keyword">this</span>.addFlagsToIntent(intent, context);</span><br><span class="line">        <span class="keyword">return</span> intent;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-<h3 id="六-router-android优点和不足之处在哪"><a href="#六-router-android优点和不足之处在哪" class="headerlink" title="六. router-android优点和不足之处在哪"></a>六. router-android优点和不足之处在哪</h3><p>6.1 是否可以跳转到某个fragment<br>6.2 RouterOptions有什么用处<br>6.3 RouterParams RouterOptions 各有什么用处？为什么这样设计？从中可以学到什么？是否有改进的方案</p>
+<h3 id="六-router-android优点和不足之处在哪"><a href="#六-router-android优点和不足之处在哪" class="headerlink" title="六. router-android优点和不足之处在哪"></a>六. router-android优点和不足之处在哪</h3><p>6.1 是否可以跳转到某个fragment?<br>答:通过handle处理，可以实现<br>6.2 RouterOptions有什么用处<br>答：把跳转逻辑封装，最主要的实现notification和web的跳转<br>6.3 RouterParams RouterOptions 各有什么用处？为什么这样设计？从中可以学到什么？是否有改进的方案<br>答：定义scheme，通过url特殊字段处理。</p>
 <h3 id="七-参考"><a href="#七-参考" class="headerlink" title="七. 参考"></a>七. 参考</h3><p><a href="http://blog.startry.com/2016/02/14/Think-Of-UIViewController-Switch/" target="_blank" rel="external">iOS界面跳转的一些优化方案</a><br><a href="http://www.mobile-open.com/2015/38865.html" target="_blank" rel="external">routable-android——可路由的Android类库</a></p>
 
       
